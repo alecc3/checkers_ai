@@ -8,6 +8,7 @@ class MonteCarlo:
     def __init__(self, myBoard, myPlayer, **kwargs):
         self.board = myBoard
         self.player = myPlayer
+        self.opponent = {1: 2, 2: 1}
         self.states = []
         self.wins = {}
         self.plays = {}
@@ -31,18 +32,26 @@ class MonteCarlo:
         expand = True
         for _ in range(self.max_moves):
 
-            moves = []
+            # randomly pick a move for ourself
+            my_moves = []
             all_moves = board_copy.get_all_possible_moves(self.player)
             for i in all_moves:
                 for j in i:
-                    moves.append(j)
-
-            if moves:
-                move = choice(moves)
+                    my_moves.append(j)
+            if my_moves:
+                move = choice(my_moves)
                 board_copy.make_move(move, self.player)
 
-            print(self.player)
-            print(moves)
+            # randomly pick a move for the opponent
+            opp_moves = []
+            all_moves = board_copy.get_all_possible_moves(self.opponent[self.player])
+            for i in all_moves:
+                for j in i:
+                    opp_moves.append(j)
+            if opp_moves:
+                move = choice(opp_moves)
+                board_copy.make_move(move, self.opponent[self.player])
+
             board_copy.show_board()
 
             if expand and board_copy not in self.plays:
