@@ -20,8 +20,8 @@ class MonteCarlo:
         for _ in range(self.stop_criteria):
             self.run_simulation()
 
-        for board in self.plays.keys():
-            print(self.wins[board], self.plays[board])
+        for move in self.plays.keys():
+            print(move, self.wins[move], self.plays[move])
 
 
     def run_simulation(self):
@@ -34,21 +34,21 @@ class MonteCarlo:
 
             # randomly pick a move for ourself
             my_moves = []
+            chosen_move = None
             all_moves = board_copy.get_all_possible_moves(self.player)
-
             for i in all_moves:
                 for j in i:
                     my_moves.append(j)
             if my_moves:
-                move = choice(my_moves)
-                board_copy.make_move(move, self.player)
+                chosen_move = choice(my_moves)
+                board_copy.make_move(chosen_move, self.player)
             #board_copy.show_board()
 
-            if expand and board_copy not in self.plays:
+            if expand and chosen_move not in self.plays:
                 expand = False
-                self.plays[board_copy] = 0
-                self.wins[board_copy] = 0
-            visited_boards.add(board_copy)
+                self.plays[chosen_move] = 0
+                self.wins[chosen_move] = 0
+            visited_boards.add(chosen_move)
 
             winner = board_copy.is_win(self.player)
             if winner != 0:
@@ -57,7 +57,6 @@ class MonteCarlo:
             # randomly pick a move for the opponent
             opp_moves = []
             all_moves = board_copy.get_all_possible_moves(self.opponent[self.player])
-
             for i in all_moves:
                 for j in i:
                     opp_moves.append(j)
@@ -70,9 +69,9 @@ class MonteCarlo:
             if winner != 0:
                 break
 
-        for board in visited_boards:
-            if board not in self.plays:
+        for move in visited_boards:
+            if move not in self.plays:
                 continue
-            self.plays[board] += 1
+            self.plays[move] += 1
             if self.player == winner:
-                self.wins[board] += 1
+                self.wins[move] += 1
